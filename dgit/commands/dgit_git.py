@@ -8,31 +8,23 @@ from .utils import command_run
 #     with open(dgit_path, "w") as f:
 #         json.dump({"submodule": submodule}, f, indent=4, sort_keys=True)
 
-def dgit_init():
-    # git init
-    if not os.path.isdir(".git"):
-        com = "git init"
-        command_run(command=com)
-    else:
-        print("git existed.")
+def dgit_git(unknownargs):
+    com = "git "
+    for a in unknownargs:
+        com += "{} ".format(a)
 
-    # dvc init
-    if not os.path.isdir(".dvc"):
-        com = "dvc init"
-        command_run(command=com)
-    else:
-        print("dvc existed.")
+    command_run(command=com)
 
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "Init the git and dvc"
+        self.command_help = "git command"
         self.parser = None
         self.add_parser(subparsers)
 
     def add_parser(self, subparsers):
         self.parser = subparsers.add_parser(
-            "init",
+            "git",
             help=self.command_help,
         )
         # self.parser.add_argument('--submodule',
@@ -45,5 +37,5 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        dgit_init()
+        dgit_git(unknownargs)
         # print(args.w)

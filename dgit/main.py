@@ -2,17 +2,21 @@ import argparse
 import json
 import os
 
-from .commands import dgit_init, dgit_check, dgit_tag, dgit_add, dgit_commit, dgit_pull
+from .commands import dgit_init, dgit_check, dgit_data_pull, dgit_add, dgit_commit, dgit_pull, dgit_remote, \
+    dgit_git, dgit_push
 
 # from dgit.commands import dgit_init
 
 COMMANDS = [
     dgit_init,
     dgit_check,
-    dgit_tag,
+    dgit_data_pull,
     dgit_add,
     dgit_commit,
-    dgit_pull
+    dgit_pull,
+    dgit_push,
+    dgit_remote,
+    dgit_git
 ]
 
 

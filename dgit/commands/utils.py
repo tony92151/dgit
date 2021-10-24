@@ -8,8 +8,10 @@ def dgit_read(dgit_path):
         contant = json.load(f)
     return contant
 
+
 import sys
 import subprocess
+
 
 def roll_output(proc, file=None):
     # https://www.endpoint.com/blog/2015/01/28/getting-realtime-output-using-python
@@ -28,13 +30,12 @@ def roll_output(proc, file=None):
     rc = proc.poll()
     print("End output, PID : {}".format(proc.pid))
 
-def run_git(args:list):
-    # print("")
-    com = "git "
-    for a in args:
-        com+= "{} ".format(a)
+
+def command_run(command):
+    print("\n $ {}".format(command))
+    print("\n")
     proc = subprocess.Popen(
-        com, shell=True,
+        command, shell=True,
         stdout=subprocess.PIPE)
     roll_output(proc)
     proc.wait()

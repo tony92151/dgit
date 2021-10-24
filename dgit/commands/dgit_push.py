@@ -7,31 +7,34 @@ from .utils import command_run
 
 # dvc add --no-commit
 
-def run_dvc_add(dvc_path, args, unknowargs: list):
+def check_s3_key():
+    if os.getenv("AWS_ACCESS_KEY_ID", None) is None:
+        os.environ["AWS_ACCESS_KEY_ID"] = input("AWS_ACCESS_KEY_ID=")
+
+    if os.getenv("AWS_SECRET_ACCESS_KEY", None) is None:
+        os.environ["AWS_SECRET_ACCESS_KEY"] = input("AWS_SECRET_ACCESS_KEY=")
+
+
+def dgit_push(dvc_path, args, unknowargs: list):
     # print("")
-    com = "dvc --cd {} add --no-commit --file DATA.dvc ".format(dvc_path)
+    # git push
+    com = "git push --tags"
+    command_run(command=com)
+
+    com = "dvc --cd {} push".format(dvc_path)
     for a in unknowargs:
         com += "{} ".format(a)
-
     command_run(command=com)
-
-    # git add .dvc
-    com = "git add DATA.dvc"
-    # for a in unknowargs:
-    #     com += "{}.dvc ".format(a)
-
-    command_run(command=com)
-
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "dvc add --no-commit [args]"
+        self.command_help = "git push --tags && dvc push"
         self.parser = None
         self.add_parser(subparsers)
 
     def add_parser(self, subparsers):
         self.parser = subparsers.add_parser(
-            "add",
+            "push",
             help=self.command_help,
         )
 
@@ -44,12 +47,12 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
+        print("\nCheck s3 key...")
+        check_s3_key()
         dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        if len(unknownargs)<1:
-            self.parser.print_help()
-        run_dvc_add(dvc_path,
-                    args,
-                    unknownargs)
+        dgit_push(dvc_path,
+                  args,
+                  unknownargs)
         # from git import Repo
         # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
         # if args.tags:

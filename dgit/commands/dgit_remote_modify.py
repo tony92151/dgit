@@ -5,62 +5,55 @@ import subprocess
 from .utils import command_run
 
 
-# dvc add --no-commit
+def dgit_remote_modify(dvc_path, args, unknownargs=None):
+    # dgit remote modify
+    com = "dvc --cd {} remote modify {} endpointurl {}".format(dvc_path, args.name, args.endpointurl)
 
-def run_dvc_commit(dvc_path, args, unknowargs: list):
-    # print("")
-    # dvc commit
-    com = "dvc --cd {} commit ".format(dvc_path)
-    for a in unknowargs:
+    # add unknownargs
+    for a in unknownargs:
         com += "{} ".format(a)
-    command_run(command=com)
 
-    # git commit
-    com = "git commit -m '{}'".format(args.m)
-    # for a in unknowargs:
-    #     com += "{} ".format(a)
-    command_run(command=com)
-
-    # git tag
-    com = "git tag {} -a -m 'add tag {}'".format(args.tag, args.tag)
-    # for a in unknowargs:
-    #     com += "{} ".format(a)
+    print("\n $ {}".format(com))
+    print("\n")
     command_run(command=com)
 
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "dvc commit [args]"
+        self.command_help = "dvc remote modify [args] endpointurl [args]"
         self.parser = None
         self.add_parser(subparsers)
 
     def add_parser(self, subparsers):
         self.parser = subparsers.add_parser(
-            "commit",
+            "modify",
             help=self.command_help,
         )
 
         self.parser.add_argument(
-            '--m',
+            '--name',
             type=str,
-            help='commit message.',
-            required=True,
+            default="myremote",
+            help='name for remote storage, exp: myremote',
+            required=True
         )
 
         self.parser.add_argument(
-            '--tag',
+            '--endpointurl',
             type=str,
-            help='tag to this commit.',
-            required=True,
+            default="https://myendpoint.com",
+            help='endpointurl to remote s3 provider, exp: https://myendpoint.com',
+            required=True
         )
+
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
         print(unknownargs)
         dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        run_dvc_commit(dvc_path,
-                       args,
-                       unknownargs)
+        dgit_remote_modify(dvc_path,
+                           args,
+                           unknownargs)
         # from git import Repo
         # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
         # if args.tags:

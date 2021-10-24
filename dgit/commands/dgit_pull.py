@@ -1,8 +1,9 @@
 import argparse
 import os
 import subprocess
+from git import Repo
+from .utils import command_run
 
-from .utils import dgit_read, roll_output
 
 # dvc add --no-commit
 
@@ -13,18 +14,26 @@ def check_s3_key():
     if os.getenv("AWS_SECRET_ACCESS_KEY", None) is None:
         os.environ["AWS_SECRET_ACCESS_KEY"] = input("AWS_SECRET_ACCESS_KEY=")
 
-def run_dvc_pull(dvc_path, unknowargs:list):
+
+def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
     # print("")
-    com = "dvc --cd {} pull".format(dvc_path)
-    for a in unknowargs:
-        com+= "{} ".format(a)
-    print("\n $ {}".format(com))
-    print("\n")
-    proc = subprocess.Popen(
-        com, shell=True,
-        stdout=subprocess.PIPE)
-    roll_output(proc)
-    proc.wait()
+    repo.pull()
+    # com = "git pull".format(dvc_path)
+    # command_run(command=com)
+
+    # if args.data:
+    #     for i, v in enumerate(repo.tags):
+    #         print("({}) {}".format(i, v))
+    #
+    #     selected_tag = str(repo.tags[int(input("? "))])
+    #     repo.git.checkout(selected_tag, os.path.join("AI9_data_version.dvc"))
+    #     print("\ngit checkout to : ", selected_tag)
+    #
+    #     print("\nCheck s3 key...")
+    #     check_s3_key()
+    #     com = "dvc --cd {} pull".format(dvc_path)
+    #     command_run(command=com)
+
 
 class CMD_init:
     def __init__(self, subparsers):
@@ -39,18 +48,22 @@ class CMD_init:
         )
 
         # self.parser.add_argument(
-        #     '--tags',
-        #     help='list all tags',
+        #     '--data',
+        #     help='pull with data',
         #     action='store_true'
         # )
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        print("\nCheck s3 key...")
-        check_s3_key()
-        run_dvc_pull(os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]),
-                    unknownargs)
+        dvc_path = os.getenv("DVC_REPO_PATH", ".")
+        repo = Repo(path=dvc_path)
+
+        dvc_path = os.getenv("DVC_REPO_PATH", ".")
+        dgit_pull(dvc_path,
+                  repo,
+                  args,
+                  unknownargs)
         # from git import Repo
         # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
         # if args.tags:
