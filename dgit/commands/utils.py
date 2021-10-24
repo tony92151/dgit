@@ -1,0 +1,40 @@
+import argparse
+import json
+import os
+
+
+def dgit_read(dgit_path):
+    with open(dgit_path, "r") as f:
+        contant = json.load(f)
+    return contant
+
+import sys
+import subprocess
+
+def roll_output(proc, file=None):
+    # https://www.endpoint.com/blog/2015/01/28/getting-realtime-output-using-python
+    while True:
+        output = proc.stdout.readline()
+        if proc.poll() is not None:
+            break
+        if output:
+            if file is None:
+                print(output.decode('utf-8').splitlines()[0])
+            else:
+                f = open(file, "a")
+                f.write(output + "\n")
+                f.close()
+
+    rc = proc.poll()
+    print("End output, PID : {}".format(proc.pid))
+
+def run_git(args:list):
+    # print("")
+    com = "git "
+    for a in args:
+        com+= "{} ".format(a)
+    proc = subprocess.Popen(
+        com, shell=True,
+        stdout=subprocess.PIPE)
+    roll_output(proc)
+    proc.wait()
