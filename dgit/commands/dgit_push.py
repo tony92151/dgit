@@ -18,7 +18,7 @@ def check_s3_key():
 def dgit_push(dvc_path, args, unknowargs: list):
     # print("")
     # git push
-    com = "git push --tags"
+    com = "git push && git push --tags"
     command_run(command=com)
 
     com = "dvc --cd {} push".format(dvc_path)

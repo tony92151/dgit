@@ -3,8 +3,11 @@ import os
 from git import Repo
 from .utils import command_run
 
+from .dgit_pull import check_s3_key
+
 
 def dgit_data_pull(dvc_path, args, unknownargs):
+    check_s3_key()
     com = "dvc --cd {} pull".format(dvc_path)
     command_run(command=com)
 
