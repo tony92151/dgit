@@ -18,7 +18,7 @@ COMMANDS = [
 
 # if __name__ == "__main__":
 def main():
-    parent_parser = argparse.ArgumentParser("dgit app")
+    parent_parser = argparse.ArgumentParser("dgit")
 
     # Sub commands
     subparsers = parent_parser.add_subparsers(title="Available Commands")
@@ -29,4 +29,8 @@ def main():
     cmd = [c.CMD_init(subparsers) for c in COMMANDS]
 
     args, unknownargs = parent_parser.parse_known_args()
-    args.func(args, unknownargs)
+
+    try:
+        args.func(args, unknownargs)
+    except AttributeError:
+        parent_parser.print_help()
