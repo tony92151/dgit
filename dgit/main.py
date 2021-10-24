@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import git
 
 from .commands import dgit_init, dgit_check, dgit_data_pull, dgit_add, dgit_commit, dgit_pull, dgit_remote, \
     dgit_git, dgit_push
@@ -29,6 +30,15 @@ def main():
 
     # cmd_init = dgit_init.CMD_init(subparsers)
     # cmd_check = dgit_check.CMD_init(subparsers)
+
+
+    try:
+        repo = git.Repo(".")
+        get_submudule = repo.submodules[0].abspath
+        os.environ["DVC_REPO_PATH"] = get_submudule
+        print("Find submodule: {}".format(get_submudule))
+    except:
+        pass
 
     cmd = [c.CMD_init(subparsers) for c in COMMANDS]
 
