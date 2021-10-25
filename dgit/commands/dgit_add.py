@@ -8,6 +8,10 @@ from .utils import command_run
 # dvc add --no-commit
 
 def run_dvc_add(dvc_path, args, unknowargs: list):
+    if not os.path.isfile(os.path.join(dvc_path, "DATA.dvc")):
+        add_ignore = True
+    else:
+        add_ignore = False
     # print("")
     com = "dvc --cd {} add --no-commit --file DATA.dvc ".format(dvc_path)
     for a in unknowargs:
@@ -21,6 +25,10 @@ def run_dvc_add(dvc_path, args, unknowargs: list):
     #     com += "{}.dvc ".format(a)
 
     command_run(command=com)
+
+    if add_ignore:
+        com = "git add .gitignore"
+        command_run(command=com)
 
 
 class CMD_init:
