@@ -22,7 +22,10 @@ def run_dvc_commit(dvc_path, args, unknowargs: list):
     command_run(command=com)
 
     # git tag
-    com = "git tag {} -a -m 'add tag {}'".format(args.tag, args.tag)
+    if args.force:
+        com = "git tag {} -a -m -f 'add tag {}'".format(args.tag, args.tag)
+    else:
+        com = "git tag {} -a -m 'add tag {}'".format(args.tag, args.tag)
     # for a in unknowargs:
     #     com += "{} ".format(a)
     command_run(command=com)
@@ -53,6 +56,13 @@ class CMD_init:
             help='tag to this commit.',
             required=True,
         )
+
+        self.parser.add_argument(
+            '--force',
+            action="store_true",
+            help='Replace existed tag.',
+        )
+
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):

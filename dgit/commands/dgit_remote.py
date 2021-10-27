@@ -31,6 +31,9 @@ def dgit_remote_add(dvc_path, args, unknownargs=None):
     if args.git_commit:
         com = "git add .dvc && git commit -m \"dvc init\""
         command_run(command=com)
+    else:
+        print("\nRemind: you can make a checkpoint for dvc setting before data versioning.")
+        print("\t$ git add .dvc && git commit -m \"dvc init\"")
 
 
 class CMD_init:
@@ -76,7 +79,7 @@ class CMD_init:
         self.parser.add_argument(
             '--git-commit',
             action="store_true",
-            help='auto git add dvc init file and commit',
+            help='make a checkpoint for dvc setting before data versioning $ git add .dvc && git commit -m \"dvc init\"',
         )
 
         self.parser.set_defaults(func=self.command)

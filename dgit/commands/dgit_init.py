@@ -11,7 +11,7 @@ from .utils import command_run
 def dgit_init():
     # git init
     if not os.path.isdir(".git"):
-        com = "git init"
+        com = "git init -b main"
         command_run(command=com)
     else:
         print("git existed.")
@@ -22,6 +22,9 @@ def dgit_init():
         command_run(command=com)
     else:
         print("dvc existed.")
+
+    print("\nSetting remote storage if not set yet.")
+    print("\t$ dgit remote_add -h")
 
 
 class CMD_init:
