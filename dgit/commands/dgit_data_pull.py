@@ -8,7 +8,7 @@ from .dgit_pull import check_s3_key
 
 def dgit_data_pull(dvc_path, args, unknownargs):
     check_s3_key()
-    com = "dvc --cd {} pull".format(dvc_path)
+    com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
     command_run(command=com)
 
 

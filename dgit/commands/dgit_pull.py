@@ -23,6 +23,9 @@ def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
 
     if args.without_data:
         pass
+    else:
+        com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
+        command_run(command=com)
     # if args.data:
     #     for i, v in enumerate(repo.tags):
     #         print("({}) {}".format(i, v))
