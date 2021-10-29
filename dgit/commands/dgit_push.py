@@ -2,7 +2,7 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run
+from .utils import command_run, DGIT_DATA_FILE
 
 
 # dvc add --no-commit
@@ -21,7 +21,7 @@ def dgit_push(dvc_path, args, unknowargs: list):
     com = "git push && git push --tags"
     command_run(command=com)
 
-    com = "dvc --cd {} push".format(dvc_path)
+    com = "dvc --cd {} push {}".format(dvc_path, DGIT_DATA_FILE)
     for a in unknowargs:
         com += "{} ".format(a)
     command_run(command=com)
