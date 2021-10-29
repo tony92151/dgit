@@ -1,7 +1,7 @@
 import argparse
 import os
 from git import Repo
-from .utils import command_run
+from .utils import command_run, DGIT_DATA_FILE
 
 from .dgit_pull import check_s3_key
 
@@ -33,7 +33,7 @@ class CMD_init:
             print("({}) {}".format(i, v))
 
         selected_tag = str(repo.tags[int(input("? "))])
-        repo.git.checkout(selected_tag, os.path.join("DATA.dvc"))
+        repo.git.checkout(selected_tag, os.path.join(DGIT_DATA_FILE))
         print("\ngit checkout to : ", selected_tag)
 
         dgit_data_pull(dvc_path, args, unknownargs)

@@ -13,6 +13,8 @@ import sys
 import subprocess
 
 
+DGIT_DATA_FILE = ".dvc/DGITFILE"
+
 def roll_output(proc, file=None):
     # https://www.endpoint.com/blog/2015/01/28/getting-realtime-output-using-python
     while True:

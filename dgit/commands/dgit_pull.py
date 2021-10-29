@@ -2,7 +2,7 @@ import argparse
 import os
 import subprocess
 from git import Repo
-from .utils import command_run
+from .utils import command_run, DGIT_DATA_FILE
 
 
 # dvc add --no-commit
@@ -21,6 +21,8 @@ def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
     # com = "git pull".format(dvc_path)
     # command_run(command=com)
 
+    if args.without_data:
+        pass
     # if args.data:
     #     for i, v in enumerate(repo.tags):
     #         print("({}) {}".format(i, v))
@@ -47,11 +49,11 @@ class CMD_init:
             help=self.command_help,
         )
 
-        # self.parser.add_argument(
-        #     '--data',
-        #     help='pull with data',
-        #     action='store_true'
-        # )
+        self.parser.add_argument(
+            '--without-data',
+            help='pull {} only'.format(DGIT_DATA_FILE),
+            action='store_true'
+        )
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):

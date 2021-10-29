@@ -2,25 +2,25 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run
+from .utils import command_run, DGIT_DATA_FILE
 
 
 # dvc add --no-commit
 
 def run_dvc_add(dvc_path, args, unknowargs: list):
-    if not os.path.isfile(os.path.join(dvc_path, "DATA")):
+    if not os.path.isfile(os.path.join(dvc_path, DGIT_DATA_FILE)):
         add_ignore = True
     else:
         add_ignore = False
     # print("")
-    com = "dvc --cd {} add --no-commit --file DATA ".format(dvc_path)
+    com = "dvc --cd {} add --no-commit --file {} ".format(dvc_path, DGIT_DATA_FILE)
     for a in unknowargs:
         com += "{} ".format(a)
 
     command_run(command=com)
 
     # git add .dvc
-    com = "git add DATA.dvc"
+    com = "git add {}".format(DGIT_DATA_FILE)
     # for a in unknowargs:
     #     com += "{}.dvc ".format(a)
 
