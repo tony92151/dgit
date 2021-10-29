@@ -13,6 +13,8 @@ def run_dvc_add(dvc_path, args, unknowargs: list):
     else:
         add_ignore = False
     # print("")
+
+    os.makedirs(os.path.dirname(os.path.join(dvc_path, DGIT_DATA_FILE)), exist_ok=True)
     com = "dvc --cd {} add --no-commit --file {} ".format(dvc_path, DGIT_DATA_FILE)
     for a in unknowargs:
         com += "{} ".format(a)
