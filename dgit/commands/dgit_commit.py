@@ -23,7 +23,11 @@ def run_dvc_commit(dvc_path, args, unknowargs: list):
 
     # git tag
     if args.force:
-        com = "git tag -d {} && git tag {} -a -m 'add tag {}'".format(args.tag, args.tag, args.tag)
+        # remove tag on remote(github)
+        # git push origin :v1_data
+
+        com = "git push origin :{} && git tag -d {} && git tag {} -a -m 'add tag {}'".format(
+            args.tag, args.tag, args.tag, args.tag)
     else:
         com = "git tag {} -a -m 'add tag {}'".format(args.tag, args.tag)
     # for a in unknowargs:
