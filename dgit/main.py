@@ -3,7 +3,7 @@ import json
 import os
 import git
 
-from .commands import dgit_init, dgit_check, dgit_data_pull, dgit_add, dgit_commit, dgit_pull, dgit_remote, \
+from .commands import dgit_init, dgit_checkout, dgit_data_pull, dgit_add, dgit_commit, dgit_pull, dgit_remote, \
     dgit_git, dgit_push
 
 # from dgit.commands import dgit_init
