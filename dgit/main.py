@@ -10,7 +10,7 @@ from .commands import dgit_init, dgit_checkout, dgit_data_pull, dgit_add, dgit_c
 
 COMMANDS = [
     dgit_init,
-    dgit_check,
+    dgit_checkout,
     dgit_data_pull,
     dgit_add,
     dgit_commit,

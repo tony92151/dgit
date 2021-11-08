@@ -57,6 +57,14 @@ class CMD_init:
             help='pull {} only'.format(DGIT_DATA_FILE),
             action='store_true'
         )
+
+        self.parser.add_argument(
+            '--force',
+            help='',
+            action='store_true'
+        )
+
+
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
