@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="data-git",
+    name="dgit",
     version="1.1",
     author="tonyguo",
     author_email="tony92151@gmail.com",
