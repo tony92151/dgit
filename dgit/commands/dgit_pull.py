@@ -17,7 +17,7 @@ def check_s3_key():
 
 def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
     # print("")
-    repo.pull()
+    # repo.pull()
     # com = "git pull".format(dvc_path)
     # command_run(command=com)
     o = repo.remotes.origin
