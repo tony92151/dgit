@@ -20,6 +20,8 @@ def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
     repo.pull()
     # com = "git pull".format(dvc_path)
     # command_run(command=com)
+    o = repo.remotes.origin
+    o.pull()
 
     if args.without_data:
         pass
@@ -72,7 +74,9 @@ class CMD_init:
         dvc_path = os.getenv("DVC_REPO_PATH", ".")
         repo = Repo(path=dvc_path)
 
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
+        check_s3_key()
+
+        #dvc_path = os.getenv("DVC_REPO_PATH", ".")
         dgit_pull(dvc_path,
                   repo,
                   args,
