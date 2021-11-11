@@ -29,7 +29,7 @@ def dgit_init():
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "Init the git and dgit"
+        self.command_help = "Init the git and dgit."
         self.parser = None
         self.add_parser(subparsers)
 

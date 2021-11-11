@@ -37,7 +37,7 @@ def run_dvc_commit(dvc_path, args, unknowargs: list):
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "Create a new commit containing staged files"
+        self.command_help = "Create a new commit containing staged files."
         self.parser = None
         self.add_parser(subparsers)
 
