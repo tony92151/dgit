@@ -28,7 +28,7 @@ def dgit_push(dvc_path, args, unknowargs: list):
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "git push --tags && dvc push"
+        self.command_help = "Updates remote refs using local refs and upload newest dataset to remote storage."
         self.parser = None
         self.add_parser(subparsers)
 

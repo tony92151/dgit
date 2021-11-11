@@ -40,4 +40,10 @@ def command_run(command):
         command, shell=True,
         stdout=subprocess.PIPE)
     roll_output(proc)
+
+    # stdout, stderr = proc.communicate()
+    # exit_code = proc.wait()
+    # print(stdout, stderr, exit_code)
     proc.wait()
+    # return stdout, stderr, exit_code
+

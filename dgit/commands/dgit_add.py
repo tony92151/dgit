@@ -35,7 +35,7 @@ def run_dvc_add(dvc_path, args, unknowargs: list):
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "dvc add --no-commit [args]"
+        self.command_help = "Stage file for next commit."
         self.parser = None
         self.add_parser(subparsers)
 

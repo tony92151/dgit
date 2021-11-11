@@ -20,7 +20,7 @@ def dgit_checkout(dvc_path, repo: Repo, selected_tag,args, unknowargs: list):
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "checkout to different version."
+        self.command_help = "Checkout to specific version."
         self.parser = None
         self.add_parser(subparsers)
 

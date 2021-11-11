@@ -44,7 +44,7 @@ def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
 
 class CMD_init:
     def __init__(self, subparsers):
-        self.command_help = "dvc pull [args]"
+        self.command_help = "Incorporates changes from a remote repository into the current branch and pull newest data from remote storage."
         self.parser = None
         self.add_parser(subparsers)
 
