@@ -2,7 +2,7 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run, DGIT_DATA_FILE
+from .utils import command_run, DGIT_DATA_FILE, check_git_path
 
 
 # dvc add --no-commit
@@ -47,6 +47,7 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
+        check_git_path()
         print("\nCheck s3 key...")
         check_s3_key()
         dvc_path = os.getenv("DVC_REPO_PATH", ".")

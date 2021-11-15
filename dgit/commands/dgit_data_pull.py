@@ -1,7 +1,7 @@
 import argparse
 import os
 from git import Repo
-from .utils import command_run, DGIT_DATA_FILE
+from .utils import command_run, DGIT_DATA_FILE, check_git_path
 
 from .dgit_pull import check_s3_key
 
@@ -26,6 +26,8 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
+        print(unknownargs)
+        check_git_path()
         dvc_path = os.getenv("DVC_REPO_PATH", ".")
         repo = Repo(path=dvc_path)
 

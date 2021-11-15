@@ -33,29 +33,23 @@ def main():
     # cmd_check = dgit_check.CMD_init(subparsers)
 
     # check git repo
+    dgit_submudule = []
     try:
         repo = git.Repo(".")
+        # check git submudule whether dgit project
+        for s in repo.submodules:
+            if os.path.isdir(os.path.join(s.abspath, ".dgit")):
+                dgit_submudule.append(s.abspath)
     except git.exc.InvalidGitRepositoryError:
         print("Not in a git repository.")
-
-    # check git submudule whether dgit project
-
-    dgit_submudule = []
-    for s in repo.submodules:
-        if os.path.isdir(os.path.join(s.abspath, ".dgit")):
-            dgit_submudule.append(s.abspath)
 
     if len(dgit_submudule) > 1:
         print("Multi dgit repository found in submudule. Please enter submudule to operate.")
     elif len(dgit_submudule) == 1:
         get_submudule = dgit_submudule[0].abspath
-
         print("Find submodule: {}".format(get_submudule))
         os.environ["DVC_REPO_PATH"] = get_submudule
-    elif os.path.isdir(os.path.join(".", ".dgit")):
-        pass
-    else:
-        check_git_path()
+
 
     cmd = [c.CMD_init(subparsers) for c in COMMANDS]
 
