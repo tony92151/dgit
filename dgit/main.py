@@ -43,7 +43,7 @@ def main():
     for s in repo.submodules:
         if os.path.isdir(os.path.join(s.abspath, ".dgit")):
             dgit_submudule.append(s.abspath)
-            
+
     if len(dgit_submudule) > 1:
         print("Multi dgit repository found in submudule. Please enter submudule to operate.")
     elif len(dgit_submudule) == 1:

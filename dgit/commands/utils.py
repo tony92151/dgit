@@ -12,8 +12,8 @@ def dgit_read(dgit_path):
 import sys
 import subprocess
 
-
 DGIT_DATA_FILE = ".dgit/DGITFILE.dvc"
+
 
 def roll_output(proc, file=None):
     # https://www.endpoint.com/blog/2015/01/28/getting-realtime-output-using-python
@@ -33,7 +33,17 @@ def roll_output(proc, file=None):
     print("End output, PID : {}".format(proc.pid))
 
 
-def command_run(command):
+def check_git_path(path="."):
+    if os.getenv(os.environ["DVC_REPO_PATH"], None) is None:
+        path = os.path.abspath(path)
+        while not path == "/":
+            path = os.path.dirname(path)
+            if os.path.isdir(path, ".git"):
+                break
+        os.environ["DVC_REPO_PATH"] = path
+
+
+def command_run(command, result=False):
     print("\n $ {}".format(command))
     print("\n")
     proc = subprocess.Popen(
@@ -46,4 +56,3 @@ def command_run(command):
     # print(stdout, stderr, exit_code)
     proc.wait()
     # return stdout, stderr, exit_code
-

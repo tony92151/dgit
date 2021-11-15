@@ -39,7 +39,7 @@ def dgit_remote_add(dvc_path, args, unknownargs=None):
 class CMD_init:
     def __init__(self, subparsers):
         # self.command_help = "dvc remote add -f -d --local [args] s3://[args] && dvc remote modify [args] [args]"
-        self.command_help = ""
+        self.command_help = "Specific remote s3 storage."
         self.parser = None
         self.add_parser(subparsers)
 
