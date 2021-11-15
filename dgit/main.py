@@ -43,13 +43,16 @@ def main():
     for s in repo.submodules:
         if os.path.isdir(os.path.join(s.abspath, ".dgit")):
             dgit_submudule.append(s.abspath)
+            
     if len(dgit_submudule) > 1:
         print("Multi dgit repository found in submudule. Please enter submudule to operate.")
-    else:
+    elif len(dgit_submudule) == 1:
         get_submudule = dgit_submudule[0].abspath
 
-    print("Find submodule: {}".format(get_submudule))
-    os.environ["DVC_REPO_PATH"] = get_submudule
+        print("Find submodule: {}".format(get_submudule))
+        os.environ["DVC_REPO_PATH"] = get_submudule
+    elif os.path.isdir(os.path.join(".", ".dgit")):
+        pass
 
     cmd = [c.CMD_init(subparsers) for c in COMMANDS]
 
