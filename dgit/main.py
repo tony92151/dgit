@@ -11,13 +11,13 @@ from .commands import dgit_init, dgit_checkout, dgit_data_pull, dgit_add, dgit_c
 COMMANDS = [
     dgit_init,
     dgit_checkout,
-    #dgit_data_pull,
+    # dgit_data_pull,
     dgit_add,
     dgit_commit,
     dgit_pull,
     dgit_push,
     dgit_remote,
-    dgit_git
+    # dgit_git
 ]
 
 
@@ -31,14 +31,25 @@ def main():
     # cmd_init = dgit_init.CMD_init(subparsers)
     # cmd_check = dgit_check.CMD_init(subparsers)
 
-
+    # check git repo
     try:
         repo = git.Repo(".")
-        get_submudule = repo.submodules[0].abspath
-        os.environ["DVC_REPO_PATH"] = get_submudule
-        print("Find submodule: {}".format(get_submudule))
-    except:
-        pass
+    except git.exc.InvalidGitRepositoryError:
+        print("Not in a git repository.")
+
+    # check git submudule whether dgit project
+
+    dgit_submudule = []
+    for s in repo.submodules:
+        if os.path.isdir(os.path.join(s.abspath, ".dgit")):
+            dgit_submudule.append(s.abspath)
+    if len(dgit_submudule) > 1:
+        print("Multi dgit repository found in submudule. Please enter submudule to operate.")
+    else:
+        get_submudule = s.abspath
+
+    print("Find submodule: {}".format(get_submudule))
+    os.environ["DVC_REPO_PATH"] = get_submudule
 
     cmd = [c.CMD_init(subparsers) for c in COMMANDS]
 

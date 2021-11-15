@@ -1,5 +1,6 @@
 import argparse
 import os
+import git
 from git import Repo
 from .utils import command_run, DGIT_DATA_FILE
 
@@ -9,7 +10,11 @@ def dgit_checkout(dvc_path, repo: Repo, selected_tag,args, unknowargs: list):
     # repo.pull()
     # com = "git pull".format(dvc_path)
     # command_run(command=com)
-    repo.git.checkout(selected_tag)
+    try:
+        repo.git.checkout(selected_tag)
+    except git.exc.GitCommandError:
+        print("tag not match.")
+        exit(1)
 
     if args.without_data:
         pass

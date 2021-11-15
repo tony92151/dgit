@@ -17,29 +17,16 @@ def check_s3_key():
 
 def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
     # print("")
-    # repo.pull()
-    # com = "git pull".format(dvc_path)
-    # command_run(command=com)
     o = repo.remotes.origin
     o.pull()
 
-    if args.without_data:
-        pass
-    else:
-        com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
-        command_run(command=com)
-    # if args.data:
-    #     for i, v in enumerate(repo.tags):
-    #         print("({}) {}".format(i, v))
-    #
-    #     selected_tag = str(repo.tags[int(input("? "))])
-    #     repo.git.checkout(selected_tag, os.path.join("AI9_data_version.dvc"))
-    #     print("\ngit checkout to : ", selected_tag)
-    #
-    #     print("\nCheck s3 key...")
-    #     check_s3_key()
-    #     com = "dvc --cd {} pull".format(dvc_path)
+    # if args.without_data:
+    #     pass
+    # else:
+    #     com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
     #     command_run(command=com)
+    com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
+    command_run(command=com)
 
 
 class CMD_init:
@@ -54,17 +41,17 @@ class CMD_init:
             help=self.command_help,
         )
 
-        self.parser.add_argument(
-            '--without-data',
-            help='pull {} only'.format(DGIT_DATA_FILE),
-            action='store_true'
-        )
+        # self.parser.add_argument(
+        #     '--without-data',
+        #     help='Pull git repository only.',
+        #     action='store_true'
+        # )
 
-        self.parser.add_argument(
-            '--force',
-            help='',
-            action='store_true'
-        )
+        # self.parser.add_argument(
+        #     '--force',
+        #     help='',
+        #     action='store_true'
+        # )
 
 
         self.parser.set_defaults(func=self.command)
