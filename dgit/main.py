@@ -46,7 +46,7 @@ def main():
     if len(dgit_submudule) > 1:
         print("Multi dgit repository found in submudule. Please enter submudule to operate.")
     else:
-        get_submudule = s.abspath
+        get_submudule = dgit_submudule[0].abspath
 
     print("Find submodule: {}".format(get_submudule))
     os.environ["DVC_REPO_PATH"] = get_submudule
