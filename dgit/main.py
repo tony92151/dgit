@@ -6,7 +6,7 @@ import git
 from .commands import dgit_init, dgit_checkout, dgit_data_pull, dgit_add, dgit_commit, dgit_pull, dgit_remote, \
     dgit_git, dgit_push
 
-from commands.utils import check_git_path
+from .commands.utils import check_git_path
 # from dgit.commands import dgit_init
 
 COMMANDS = [

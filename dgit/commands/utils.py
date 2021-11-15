@@ -34,11 +34,11 @@ def roll_output(proc, file=None):
 
 
 def check_git_path(path="."):
-    if os.getenv(os.environ["DVC_REPO_PATH"], None) is None:
+    if os.getenv("DVC_REPO_PATH", None) is None:
         path = os.path.abspath(path)
         while not path == "/":
             path = os.path.dirname(path)
-            if os.path.isdir(path, ".git"):
+            if os.path.isdir(os.path.join(path, ".git")):
                 break
         os.environ["DVC_REPO_PATH"] = path
 
