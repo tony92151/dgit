@@ -4,7 +4,7 @@ import os
 import git
 
 from .commands import dgit_init, dgit_checkout, dgit_data_pull, dgit_add, dgit_commit, dgit_pull, dgit_remote, \
-    dgit_git, dgit_push
+    dgit_git, dgit_push, dgit_tag
 
 from .commands.utils import locate_dgit_path, locate_git_path
 # from dgit.commands import dgit_init
@@ -19,6 +19,7 @@ COMMANDS = [
     dgit_push,
     dgit_remote,
     # dgit_git
+    dgit_tag,
 ]
 
 

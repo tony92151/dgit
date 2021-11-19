@@ -33,11 +33,11 @@ class CMD_init:
             help=self.command_help,
         )
 
-        self.parser.add_argument(
-            '--list-tags',
-            help='list all tags and select.',
-            action='store_true'
-        )
+        # self.parser.add_argument(
+        #     '--list-tags',
+        #     help='list all tags and select.',
+        #     action='store_true'
+        # )
 
         self.parser.add_argument(
             '--without-data',
@@ -53,20 +53,28 @@ class CMD_init:
 
         repo = Repo(path=dgit_path)
 
-        if args.list_tags:
-            if len(unknownargs) > 1:
-                logging.warning("Ignore arguments.")
-            # self.parser.print_help()
-            _ = print_tags(Repo(path=dgit_path))
+        # if args.list_tags:
+        #     if len(unknownargs) > 1:
+        #         logging.warning("Ignore arguments.")
+        #     # self.parser.print_help()
+        #     _ = print_tags(Repo(path=dgit_path))
+        #     return
+        #     # selected_tag = str(repo.tags[int(input("? "))])
+        # else:
+        #     if len(unknownargs) > 2:
+        #         logging.warning("Accept first arguments, ignore others.")
+        #     elif len(unknownargs) <= 0:
+        #         logging.warning("No arguments.")
+        #         return
+        #     selected_tag = unknownargs[0]
+
+
+        if len(unknownargs) > 2:
+            logging.warning("Accept first arguments, ignore others.")
+        elif len(unknownargs) <= 0:
+            logging.warning("No arguments.")
             return
-            # selected_tag = str(repo.tags[int(input("? "))])
-        else:
-            if len(unknownargs) > 2:
-                logging.warning("Accept first arguments, ignore others.")
-            elif len(unknownargs) <= 0:
-                logging.warning("No arguments.")
-                return
-            selected_tag = unknownargs[0]
+        selected_tag = unknownargs[0]
 
         dgit_checkout(dgit_path,
                       repo,
