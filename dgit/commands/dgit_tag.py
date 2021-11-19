@@ -26,4 +26,4 @@ class CMD_init:
 
         repo = Repo(path=dgit_path)
 
-        _ = print_tags(Repo(path=dgit_path))
+        _ = print_tags(repo=repo)
