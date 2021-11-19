@@ -63,6 +63,9 @@ class CMD_init:
         else:
             if len(unknownargs) > 2:
                 logging.warning("Accept first arguments, ignore others.")
+            elif len(unknownargs) <= 0:
+                logging.warning("No arguments.")
+                return
             selected_tag = unknownargs[0]
 
         dgit_checkout(dgit_path,

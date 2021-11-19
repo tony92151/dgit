@@ -33,7 +33,7 @@ class CMD_init:
     def command(self, args, unknownargs):
         print(unknownargs)
 
-        dgit_path = locate_dgit_path
+        dgit_path = locate_dgit_path()
 
         repo = Repo(path=dgit_path)
 
