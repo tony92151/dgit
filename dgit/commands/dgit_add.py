@@ -2,7 +2,7 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run, DGIT_DATA_FILE, check_git_path
+from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path
 
 
 # dvc add --no-commit
@@ -14,7 +14,7 @@ def run_dvc_add(dvc_path, args, unknowargs: list):
         add_ignore = False
     # print("")
 
-    os.makedirs(os.path.dirname(os.path.join(dvc_path, DGIT_DATA_FILE)), exist_ok=True)
+    os.makedirs(os.path.dirname(DGIT_DATA_FILE), exist_ok=True)
     com = "dvc --cd {} add --no-commit --file {} ".format(dvc_path, DGIT_DATA_FILE)
     for a in unknowargs:
         com += "{} ".format(a)
@@ -45,24 +45,14 @@ class CMD_init:
             help=self.command_help,
         )
 
-        # self.parser.add_argument(
-        #     '--tags',
-        #     help='list all tags',
-        #     action='store_true'
-        # )
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        check_git_path()
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
+        dgit_path = locate_dgit_path()
+
         if len(unknownargs) < 1:
             self.parser.print_help()
-        run_dvc_add(dvc_path,
+        run_dvc_add(dgit_path,
                     args,
                     unknownargs)
-        # from git import Repo
-        # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
-        # if args.tags:
-        #     for i, v in enumerate(repo.tags):
-        #         print("({}) {}".format(i, v))

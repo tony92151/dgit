@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+from git import Repo
 
 
 def dgit_read(dgit_path):
@@ -11,8 +12,6 @@ def dgit_read(dgit_path):
 
 import sys
 import subprocess
-
-DGIT_DATA_FILE = ".dgit/DGITFILE.dvc"
 
 
 def roll_output(proc, file=None):
@@ -33,14 +32,31 @@ def roll_output(proc, file=None):
     print("End output, PID : {}".format(proc.pid))
 
 
-def check_git_path(path="."):
-    if os.getenv("DVC_REPO_PATH", None) is None:
-        path = os.path.abspath(path)
-        while not path == "/":
-            path = os.path.dirname(path)
-            if os.path.isdir(os.path.join(path, ".git")):
-                break
-        os.environ["DVC_REPO_PATH"] = path
+def locate_dgit_path(path="."):
+    path = os.path.abspath(path)
+    while not path == "/":
+        if os.path.isdir(os.path.join(path, ".git")) and os.path.isdir(os.path.join(path, ".dvc")):
+            break
+        path = os.path.dirname(path)
+    return path
+
+
+def locate_git_path(path="."):
+    path = os.path.abspath(path)
+    while not path == "/":
+        if os.path.isdir(os.path.join(path, ".git")):
+            break
+        path = os.path.dirname(path)
+    return path
+
+
+def print_tags(repo: Repo, with_selection=False):
+    for i, v in enumerate(repo.tags):
+        print("({}) {}".format(i, v))
+    selected_tag = None
+    if with_selection:
+        selected_tag = str(repo.tags[int(input("? "))])
+    return selected_tag
 
 
 def command_run(command, result=False):
@@ -56,3 +72,14 @@ def command_run(command, result=False):
     # print(stdout, stderr, exit_code)
     proc.wait()
     # return stdout, stderr, exit_code
+
+
+def check_s3_key():
+    if os.getenv("AWS_ACCESS_KEY_ID", None) is None:
+        os.environ["AWS_ACCESS_KEY_ID"] = input("AWS_ACCESS_KEY_ID=")
+
+    if os.getenv("AWS_SECRET_ACCESS_KEY", None) is None:
+        os.environ["AWS_SECRET_ACCESS_KEY"] = input("AWS_SECRET_ACCESS_KEY=")
+
+
+DGIT_DATA_FILE = os.path.join(locate_dgit_path(), ".dgit/DGITFILE.dvc")

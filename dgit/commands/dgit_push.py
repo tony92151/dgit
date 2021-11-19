@@ -2,17 +2,7 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run, DGIT_DATA_FILE, check_git_path
-
-
-# dvc add --no-commit
-
-def check_s3_key():
-    if os.getenv("AWS_ACCESS_KEY_ID", None) is None:
-        os.environ["AWS_ACCESS_KEY_ID"] = input("AWS_ACCESS_KEY_ID=")
-
-    if os.getenv("AWS_SECRET_ACCESS_KEY", None) is None:
-        os.environ["AWS_SECRET_ACCESS_KEY"] = input("AWS_SECRET_ACCESS_KEY=")
+from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, check_s3_key
 
 
 def dgit_push(dvc_path, args, unknowargs: list):
@@ -25,6 +15,7 @@ def dgit_push(dvc_path, args, unknowargs: list):
     for a in unknowargs:
         com += "{} ".format(a)
     command_run(command=com)
+
 
 class CMD_init:
     def __init__(self, subparsers):
@@ -47,15 +38,12 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        check_git_path()
+        dgit_path = locate_dgit_path()
+
         print("\nCheck s3 key...")
         check_s3_key()
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        dgit_push(dvc_path,
+
+        dgit_push(dgit_path,
                   args,
                   unknownargs)
-        # from git import Repo
-        # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
-        # if args.tags:
-        #     for i, v in enumerate(repo.tags):
-        #         print("({}) {}".format(i, v))
+

@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from .utils import command_run, check_git_path
+from .utils import command_run, locate_dgit_path
 
 
 # def dgit_init(dgit_path, submodule):
@@ -48,6 +48,6 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        check_git_path()
+        # check_git_path()
         dgit_init()
         # print(args.w)

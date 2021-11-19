@@ -1,9 +1,7 @@
 import argparse
 import os
 from git import Repo
-from .utils import command_run, DGIT_DATA_FILE, check_git_path
-
-from .dgit_pull import check_s3_key
+from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, print_tags, check_s3_key
 
 
 def dgit_data_pull(dvc_path, args, unknownargs):
@@ -27,15 +25,13 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        check_git_path()
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        repo = Repo(path=dvc_path)
+        dgit_path = locate_dgit_path()
 
-        for i, v in enumerate(repo.tags):
-            print("({}) {}".format(i, v))
+        repo = Repo(path=dgit_path)
 
-        selected_tag = str(repo.tags[int(input("? "))])
+        selected_tag = print_tags(repo=repo, with_selection=True)
+
         repo.git.checkout(selected_tag, os.path.join(DGIT_DATA_FILE))
         print("\ngit checkout to : ", selected_tag)
 
-        dgit_data_pull(dvc_path, args, unknownargs)
+        dgit_data_pull(dgit_path, args, unknownargs)

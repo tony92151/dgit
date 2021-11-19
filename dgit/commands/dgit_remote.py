@@ -2,12 +2,9 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run, check_git_path
+from .utils import command_run, locate_dgit_path
 # import .dgit_remote_add
-from . import dgit_remote_add, dgit_remote_modify
 
-
-# dvc add --no-commit
 
 def dgit_remote_add(dvc_path, args, unknownargs=None):
     # dgit remote add
@@ -49,11 +46,6 @@ class CMD_init:
             help=self.command_help,
         )
 
-        # self.parser.
-
-        # _ = dgit_remote_add(self.parser)
-        # _ = dgit_remote_modify(self.parser)
-
         self.parser.add_argument(
             '--name',
             type=str,
@@ -87,13 +79,9 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        check_git_path()
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        dgit_remote_add(dvc_path,
+        dgit_path = locate_dgit_path()
+
+        dgit_remote_add(dgit_path,
                         args,
                         unknownargs)
-        # from git import Repo
-        # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
-        # if args.tags:
-        #     for i, v in enumerate(repo.tags):
-        #         print("({}) {}".format(i, v))
+

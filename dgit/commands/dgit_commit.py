@@ -2,7 +2,7 @@ import argparse
 import os
 import subprocess
 
-from .utils import command_run, check_git_path
+from .utils import command_run, locate_dgit_path
 
 
 # dvc add --no-commit
@@ -57,7 +57,7 @@ class CMD_init:
         self.parser.add_argument(
             '--tag',
             type=str,
-            help='tag to this commit.',
+            help='name of tag to this commit.',
             required=True,
         )
 
@@ -71,9 +71,9 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        check_git_path()
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        run_dvc_commit(dvc_path,
+        dgit_path = locate_dgit_path()
+
+        run_dvc_commit(dgit_path,
                        args,
                        unknownargs)
         # from git import Repo

@@ -2,18 +2,16 @@ import argparse
 import os
 import git
 from git import Repo
-from .utils import command_run, DGIT_DATA_FILE, check_git_path
+from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, print_tags
+import logging
 
 
-def dgit_checkout(dvc_path, repo: Repo, selected_tag,args, unknowargs: list):
-    # print("")
-    # repo.pull()
-    # com = "git pull".format(dvc_path)
-    # command_run(command=com)
+def dgit_checkout(dvc_path, repo: Repo, selected_tag, args, unknowargs: list):
+
     try:
         repo.git.checkout(selected_tag)
     except git.exc.GitCommandError:
-        print("tag not match.")
+        logging.error("tag not match.")
         exit(1)
 
     if args.without_data:
@@ -43,7 +41,7 @@ class CMD_init:
 
         self.parser.add_argument(
             '--without-data',
-            help='pull {} only'.format(DGIT_DATA_FILE),
+            help='(develop) pull {} only'.format(DGIT_DATA_FILE),
             action='store_true'
         )
 
@@ -51,24 +49,24 @@ class CMD_init:
 
     def command(self, args, unknownargs):
         print(unknownargs)
-        check_git_path()
-        if len(unknownargs) < 1:
-            self.parser.print_help()
+        dgit_path = locate_dgit_path()
 
-        dvc_path = os.getenv("DVC_REPO_PATH", ".")
-        repo = Repo(path=dvc_path)
+        repo = Repo(path=dgit_path)
 
         if args.list_tags:
-            for i, v in enumerate(repo.tags):
-                print("({}) {}".format(i, v))
-
-            selected_tag = str(repo.tags[int(input("? "))])
+            if len(unknownargs) > 1:
+                logging.warning("Ignore arguments.")
+            # self.parser.print_help()
+            _ = print_tags(Repo(path=dgit_path))
+            return
+            # selected_tag = str(repo.tags[int(input("? "))])
         else:
+            if len(unknownargs) > 2:
+                logging.warning("Accept first arguments, ignore others.")
             selected_tag = unknownargs[0]
 
-        dgit_checkout(dvc_path,
+        dgit_checkout(dgit_path,
                       repo,
                       selected_tag,
                       args,
                       unknownargs)
-
