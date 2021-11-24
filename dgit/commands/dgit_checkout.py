@@ -2,7 +2,7 @@ import argparse
 import os
 import git
 from git import Repo
-from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, print_tags
+from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, print_tags, check_s3_key
 import logging
 
 
@@ -17,6 +17,7 @@ def dgit_checkout(dvc_path, repo: Repo, selected_tag, args, unknowargs: list):
     if args.without_data:
         pass
     else:
+        check_s3_key()
         com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
         command_run(command=com)
 
