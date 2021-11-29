@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 from git import Repo
+import pandas as pd
 
 
 def dgit_read(dgit_path):
@@ -35,7 +36,7 @@ def roll_output(proc, file=None):
 def locate_dgit_path(path="."):
     path = os.path.abspath(path)
     while not path == "/":
-        if os.path.isdir(os.path.join(path, ".git")) and os.path.isdir(os.path.join(path, ".dvc")):
+        if os.path.isdir(os.path.join(path, ".git")) and os.path.isdir(os.path.join(path, ".dgit")):
             break
         path = os.path.dirname(path)
     return path
@@ -50,13 +51,18 @@ def locate_git_path(path="."):
     return path
 
 
-def print_tags(repo: Repo, with_selection=False):
-    for i, v in enumerate(repo.tags):
-        print("({}) {}".format(i, v))
-    selected_tag = None
-    if with_selection:
-        selected_tag = str(repo.tags[int(input("? "))])
-    return selected_tag
+def print_tags(repo: Repo, with_info=False):
+    if with_info:
+        tags = repo.tags
+        tags_info = []
+        for t in repo.tags:
+            tags_info.append([str(t), t.commit.committed_datetime])
+        df = pd.DataFrame(tags_info, columns=['Tag', 'Time'])
+        df = df.sort_values(by='Time')
+        print(df)
+    else:
+        for i, v in enumerate(repo.tags):
+            print("({}) {}".format(i, v))
 
 
 def command_run(command, result=False):
@@ -74,12 +80,32 @@ def command_run(command, result=False):
     # return stdout, stderr, exit_code
 
 
-def check_s3_key():
-    if os.getenv("AWS_ACCESS_KEY_ID", None) is None:
-        os.environ["AWS_ACCESS_KEY_ID"] = input("AWS_ACCESS_KEY_ID=")
+def check_s3_key_isvalid():
+    if (os.getenv("AWS_ACCESS_KEY_ID", None) is not None) and (os.getenv("AWS_SECRET_ACCESS_KEY", None) is not None):
+        return (len(os.getenv("AWS_ACCESS_KEY_ID", None)) == 20) and (
+                len(os.getenv("AWS_SECRET_ACCESS_KEY", None)) == 40)
+    else:
+        return False
 
-    if os.getenv("AWS_SECRET_ACCESS_KEY", None) is None:
-        os.environ["AWS_SECRET_ACCESS_KEY"] = input("AWS_SECRET_ACCESS_KEY=")
+
+def check_s3_key():
+    print("\nCheck s3 key...")
+
+    if os.path.isfile(os.join(locate_dgit_path(), ".dgit", "key.key")):
+        with open(os.join(locate_dgit_path(), ".dgit", "key.key"), "r") as f:
+            key = json.load(f)
+        os.environ["AWS_ACCESS_KEY_ID"] = key["AWS_ACCESS_KEY_ID"]
+        os.environ["AWS_SECRET_ACCESS_KEY"] = key["AWS_SECRET_ACCESS_KEY"]
+    else:
+        if os.getenv("AWS_ACCESS_KEY_ID", None) is None:
+            os.environ["AWS_ACCESS_KEY_ID"] = input("AWS_ACCESS_KEY_ID=")
+
+        if os.getenv("AWS_SECRET_ACCESS_KEY", None) is None:
+            os.environ["AWS_SECRET_ACCESS_KEY"] = input("AWS_SECRET_ACCESS_KEY=")
+
+    if not check_s3_key_isvalid():
+        print("s3 key is not valid. Please try again")
+        exit(1)
 
 
 DGIT_DATA_FILE = os.path.join(locate_dgit_path(), ".dgit/DGITFILE.dvc")

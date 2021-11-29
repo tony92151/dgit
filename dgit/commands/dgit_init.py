@@ -23,6 +23,7 @@ def dgit_init():
     else:
         print("dvc existed.")
 
+    os.makedirs(os.path.join(".", ".dgit"), exist_ok=True)
     print("\nSetting remote storage if not set yet.")
     print("\t$ dgit remote_add -h")
 
@@ -48,6 +49,4 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        # check_git_path()
         dgit_init()
-        # print(args.w)

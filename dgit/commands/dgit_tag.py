@@ -21,9 +21,6 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        print(unknownargs)
         dgit_path = locate_dgit_path()
-
         repo = Repo(path=dgit_path)
-
-        _ = print_tags(repo=repo)
+        print_tags(repo=repo, with_info=True)

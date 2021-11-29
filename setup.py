@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="dgit",
-    version="0.5.1",
+    version="0.5.2",
     author="tonyguo",
     author_email="tony92151@gmail.com",
     url="https://github.com/tony92151/dgit",

@@ -7,12 +7,12 @@ from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, check_s3_key
 
 # dvc add --no-commit
 
-def dgit_pull(dvc_path, repo: Repo, args, unknowargs: list):
+def dgit_pull(dgit_path, repo: Repo, args, unknowargs: list):
     # print("")
     o = repo.remotes.origin
     o.pull()
 
-    com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
+    com = "dvc --cd {} pull {}".format(dgit_path, DGIT_DATA_FILE)
     command_run(command=com)
 
 
@@ -31,14 +31,9 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        print(unknownargs)
-
         dgit_path = locate_dgit_path()
-
         repo = Repo(path=dgit_path)
-
         check_s3_key()
-
         dgit_pull(dgit_path,
                   repo,
                   args,

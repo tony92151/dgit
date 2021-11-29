@@ -5,33 +5,26 @@ import subprocess
 from .utils import command_run, locate_dgit_path
 
 
-# dvc add --no-commit
-
-def run_dvc_commit(dvc_path, args, unknowargs: list):
-    # print("")
+def run_dvc_commit(dgit_path, args, unknowargs: list):
     # dvc commit
-    com = "dvc --cd {} commit ".format(dvc_path)
+    com = "dvc --cd {} commit ".format(dgit_path)
     for a in unknowargs:
         com += "{} ".format(a)
     command_run(command=com)
 
     # git commit
     com = "git commit -m '{}'".format(args.m)
-    # for a in unknowargs:
-    #     com += "{} ".format(a)
     command_run(command=com)
 
     # git tag
     if args.force:
         # remove tag on remote(github)
-        # git push origin :v1_data
-
+        # git push origin :{tag}
         com = "git push origin :{} && git tag -d {} && git tag {} -a -m 'add tag {}'".format(
             args.tag, args.tag, args.tag, args.tag)
     else:
         com = "git tag {} -a -m 'add tag {}'".format(args.tag, args.tag)
-    # for a in unknowargs:
-    #     com += "{} ".format(a)
+
     command_run(command=com)
 
 
@@ -70,14 +63,8 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        print(unknownargs)
         dgit_path = locate_dgit_path()
 
         run_dvc_commit(dgit_path,
                        args,
                        unknownargs)
-        # from git import Repo
-        # repo = Repo(path=os.path.join(".", dgit_read(os.path.join(".", ".dgit"))["submodule"]))
-        # if args.tags:
-        #     for i, v in enumerate(repo.tags):
-        #         print("({}) {}".format(i, v))

@@ -6,7 +6,7 @@ from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path, print_tags, ch
 import logging
 
 
-def dgit_checkout(dvc_path, repo: Repo, selected_tag, args, unknowargs: list):
+def dgit_checkout(dgit_path, repo: Repo, selected_tag, args, unknowargs: list):
 
     try:
         repo.git.checkout(selected_tag)
@@ -18,7 +18,7 @@ def dgit_checkout(dvc_path, repo: Repo, selected_tag, args, unknowargs: list):
         pass
     else:
         check_s3_key()
-        com = "dvc --cd {} pull {}".format(dvc_path, DGIT_DATA_FILE)
+        com = "dvc --cd {} pull {}".format(dgit_path, DGIT_DATA_FILE)
         command_run(command=com)
 
 
@@ -49,32 +49,12 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        print(unknownargs)
         dgit_path = locate_dgit_path()
-
         repo = Repo(path=dgit_path)
 
-        # if args.list_tags:
-        #     if len(unknownargs) > 1:
-        #         logging.warning("Ignore arguments.")
-        #     # self.parser.print_help()
-        #     _ = print_tags(Repo(path=dgit_path))
-        #     return
-        #     # selected_tag = str(repo.tags[int(input("? "))])
-        # else:
-        #     if len(unknownargs) > 2:
-        #         logging.warning("Accept first arguments, ignore others.")
-        #     elif len(unknownargs) <= 0:
-        #         logging.warning("No arguments.")
-        #         return
-        #     selected_tag = unknownargs[0]
-
-
-        if len(unknownargs) > 2:
-            logging.warning("Accept first arguments, ignore others.")
-        elif len(unknownargs) <= 0:
-            logging.warning("No arguments.")
-            return
+        if len(unknownargs) > 1:
+            logging.warning("Expect one argument but got multiple arguments. Please retry.")
+            exit(1)
         selected_tag = unknownargs[0]
 
         dgit_checkout(dgit_path,

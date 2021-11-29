@@ -7,25 +7,18 @@ from .utils import command_run, DGIT_DATA_FILE, locate_dgit_path
 
 # dvc add --no-commit
 
-def run_dvc_add(dvc_path, args, unknowargs: list):
-    if not os.path.isfile(os.path.join(dvc_path, DGIT_DATA_FILE)):
+def run_dvc_add(dgit_path, args, unknowargs: list):
+    if not os.path.isfile(DGIT_DATA_FILE):
         add_ignore = True
     else:
         add_ignore = False
-    # print("")
 
-    os.makedirs(os.path.dirname(DGIT_DATA_FILE), exist_ok=True)
-    com = "dvc --cd {} add --no-commit --file {} ".format(dvc_path, DGIT_DATA_FILE)
+    com = "dvc --cd {} add --no-commit --file {} ".format(dgit_path, DGIT_DATA_FILE)
     for a in unknowargs:
         com += "{} ".format(a)
-
     command_run(command=com)
 
-    # git add .dvc
     com = "git add {}".format(DGIT_DATA_FILE)
-    # for a in unknowargs:
-    #     com += "{}.dvc ".format(a)
-
     command_run(command=com)
 
     if add_ignore:
@@ -48,11 +41,12 @@ class CMD_init:
         self.parser.set_defaults(func=self.command)
 
     def command(self, args, unknownargs):
-        print(unknownargs)
         dgit_path = locate_dgit_path()
 
+        # check if unknownargs > 0, because "dvc add" must have one  arg
         if len(unknownargs) < 1:
             self.parser.print_help()
+            exit(1)
         run_dvc_add(dgit_path,
                     args,
                     unknownargs)
